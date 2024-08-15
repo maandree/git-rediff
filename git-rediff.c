@@ -6,7 +6,7 @@
 #include <libsimple.h>
 #include <libsimple-arg.h>
 
-USAGE("[file] ...");
+USAGE("[<path>...]");
 
 #if defined(__clang__)
 # pragma clang diagnostic ignored "-Wunsafe-buffer-usage"

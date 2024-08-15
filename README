@@ -1,0 +1,27 @@
+NAME
+	git-rediff - Reduce partially resovled merge conflicts
+
+SYNOPSIS
+	git rediff [<path>...]
+
+DESCRIPTION
+	git rediff rewrites files containing merge conflicts to
+	remove conflicts that have been resolved.
+
+OPERANDS
+	path
+		File to rewrite. If - is specified, the file
+		is read from standard input, and the result
+		is written to standard output.
+
+	If no path is specified, standard input is read and
+	the result is written to standard output.
+
+EXIT STATUS
+	The following exit values are returned:
+
+	0    All merge conflicts where resolved.
+
+	1    There are still merge conflicts.
+
+	2    An error occurred.

@@ -1,0 +1,34 @@
+.TH GIT-REDIFF 1
+.SH NAME
+git-rediff - Reduce partially resovled merge conflicts
+.SH SYNOPSIS
+.I git rediff
+[<path>...]
+.SH DESCRIPTION
+.I git rediff
+rewrites files containing merge conflicts to
+remove conflicts that have been resolved.
+.SH OPERANDS
+.TP
+.I path
+File to rewrite. If
+.B -
+is specified, the file
+is read from standard input, and the result
+is written to standard output.
+.PP
+If no
+.I path
+is specified, standard input is read and
+the result is written to standard output.
+.SH EXIT STATUS
+The following exit values are returned:
+.TP
+0
+All merge conflicts where resolved.
+.TP
+1
+There are still merge conflicts.
+.TP
+2
+An error occurred.
