@@ -263,7 +263,8 @@ diff_subhunks(const struct subhunk *f1, const struct subhunk *f2)
 	if (waitpid(piddiff, &status, 0) != piddiff)
 		eprintf("waitpid <diff(1) subprocess> 0:");
 	if (status == 0) {
-		ret = erealloc(ret, f1->text.nlines + 1U);
+		ret_off = f1->text.nlines;
+		ret = erealloc(ret, ret_off + 1U);
 		memset(ret, ' ', f1->text.nlines);
 	} else if (WIFEXITED(status) && WEXITSTATUS(status) == 1) {
 		ret = erealloc(ret, ret_off + 1U);
