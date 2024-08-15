@@ -1,5 +1,5 @@
 NAME
-	git-rediff - Reduce partially resovled merge conflicts
+	git-rediff - Reduce partially resolved merge conflicts
 
 SYNOPSIS
 	git rediff [<path>...]
