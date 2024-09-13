@@ -448,7 +448,7 @@ rediff_file(struct text *text_out, const struct text *text_in, const char *fname
 			subhunk++;
 			if ((size_t)subhunk == hunk.nsubs)
 				hunk.subs = ereallocarray(hunk.subs, ++hunk.nsubs, sizeof(*hunk.subs));
-			hunk.subs[subhunk].text.nlines = 0;
+			hunk.subs[subhunk].text = (struct text){0};
 			hunk.subs[subhunk].head = &text_in->lines[i];
 		} else if (line_startswith(&text_in->lines[i], ">>>>>>>")) {
 			if (subhunk < 0)
