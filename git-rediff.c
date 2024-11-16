@@ -99,10 +99,21 @@ in_all(const unsigned char *in, size_t full_bytes, unsigned char last_byte)
 }
 
 static int
-line_startswith(struct line *line, const char *head)
+line_is_marker(struct line *line, char marker_symbol, size_t conflict_marker_size)
 {
-	size_t len = strlen(head);
-	return line->len >= len && !strncmp(line->text, head, len);
+	size_t i;
+
+	if (!conflict_marker_size)
+		conflict_marker_size = 7;
+
+	if (line->len < conflict_marker_size)
+		return 0;
+
+	for (i = 0; i < conflict_marker_size; i++)
+		if (line->text[i] != marker_symbol)
+			return 0;
+
+	return i == line->len || line->text[i] == ' ' || line->text[i] == '\n';
 }
 
 static void
@@ -424,7 +435,7 @@ rediff_hunk(struct text *resp, const struct hunk *hunk, const struct line *tail)
 }
 
 static enum successfulness
-rediff_file(struct text *text_out, const struct text *text_in, const char *fname)
+rediff_file(struct text *text_out, const struct text *text_in, size_t conflict_marker_size, const char *fname)
 {
 	size_t i, t;
 	struct hunk hunk = {0};
@@ -434,15 +445,16 @@ rediff_file(struct text *text_out, const struct text *text_in, const char *fname
 	*text_out = (struct text){0};
 
 	for (i = 0; i < text_in->nlines; i++) {
-		if (line_startswith(&text_in->lines[i], "<<<<<<<")) {
+		if (line_is_marker(&text_in->lines[i], '<', conflict_marker_size)) {
 			if (subhunk >= 0)
 				goto syntax_error;
 			goto new_subhunk;
-		} else if (line_startswith(&text_in->lines[i], "|||||||") || line_startswith(&text_in->lines[i], "=======")) {
+		} else if (line_is_marker(&text_in->lines[i], '|', conflict_marker_size) ||
+		           line_is_marker(&text_in->lines[i], '=', conflict_marker_size)) {
 			if (subhunk < 0)
 				goto syntax_error;
-			if (!line_startswith(hunk.subs[subhunk].head, "<<<<<<<") &&
-			    !line_startswith(hunk.subs[subhunk].head, "|||||||"))
+			if (!line_is_marker(hunk.subs[subhunk].head, '<', conflict_marker_size) &&
+			    !line_is_marker(hunk.subs[subhunk].head, '|', conflict_marker_size))
 				goto syntax_error;
 		new_subhunk:
 			subhunk++;
@@ -450,10 +462,10 @@ rediff_file(struct text *text_out, const struct text *text_in, const char *fname
 				hunk.subs = ereallocarray(hunk.subs, ++hunk.nsubs, sizeof(*hunk.subs));
 			hunk.subs[subhunk].text = (struct text){0};
 			hunk.subs[subhunk].head = &text_in->lines[i];
-		} else if (line_startswith(&text_in->lines[i], ">>>>>>>")) {
+		} else if (line_is_marker(&text_in->lines[i], '>', conflict_marker_size)) {
 			if (subhunk < 0)
 				goto syntax_error;
-			if (!line_startswith(hunk.subs[subhunk].head, "======="))
+			if (!line_is_marker(hunk.subs[subhunk].head, '=', conflict_marker_size))
 				goto syntax_error;
 			t = hunk.nsubs;
 			hunk.nsubs = (size_t)subhunk + 1U;
@@ -556,6 +568,83 @@ fail:
 	return -1;
 }
 
+static size_t
+get_conflict_marker_size(const char *path)
+{
+	int pipe_fds[2], status;
+	pid_t pid;
+	char *text = NULL;
+	size_t size = 0;
+	size_t len = 0;
+	size_t i, off = 0;
+	ssize_t r;
+	size_t conflict_marker_size, digit;
+
+	if (pipe(pipe_fds))
+		eprintf("pipe:");
+
+	pid = fork();
+	if (pid < 0)
+		eprintf("fork:");
+	if (pid == 0) {
+		close(pipe_fds[0]);
+		if (pipe_fds[1] != STDOUT_FILENO) {
+			close(STDOUT_FILENO);
+			if (dup2(pipe_fds[1], STDOUT_FILENO) != STDOUT_FILENO)
+				eprintf("dup2 <pipe> <stdout>:");
+			close(pipe_fds[1]);
+		}
+		execlp("git", "git", "check-attr", "conflict-marker-size", "--", path, NULL);
+		return 1;
+	}
+
+	close(pipe_fds[1]);
+
+	for (;;) {
+		if (len == size)
+			text = erealloc(text, size += 128);
+		r = read(pipe_fds[0], &text[len], size - len);
+		if (r <= 0) {
+			if (!r)
+				break;
+			if (errno == EINTR)
+				continue;
+			eprintf("read <pipe>:");
+		}
+		len += (size_t)r;
+	}
+
+	if (waitpid(pid, &status, 0) != pid)
+		eprintf("waitpid <subprocess>:");
+	if (status) {
+	use_default:
+		free(text);
+		return 0;
+	}
+
+	for (i = 0; i < len; i++)
+		if (text[i] == ' ')
+			off = i + 1U;
+
+	if (!off || text[--len] != '\n' || !isdigit(text[off]))
+		goto use_default;
+
+	conflict_marker_size = 0;
+	for (i = off; i < len; i++) {
+		if (!isdigit(text[i]))
+			goto use_default;
+		digit = (size_t)(text[i] & 15);
+		if (conflict_marker_size > (SIZE_MAX - digit) / 10U) {
+			free(text);
+			return SIZE_MAX;
+		}
+		conflict_marker_size = conflict_marker_size * 10U + digit;
+	}
+
+	free(text);
+	return conflict_marker_size;
+}
+
 static enum successfulness
 rediff(const char *fname)
 {
@@ -563,6 +652,7 @@ rediff(const char *fname)
 	char *text;
 	int fd, close_fd;
 	enum successfulness ret;
+	size_t conflict_marker_size;
 
 	if (!strcmp(fname, "-")) {
 		fname = "<stdout>";
@@ -570,6 +660,7 @@ rediff(const char *fname)
 		fd = STDOUT_FILENO;
 		if (read_lines(&text_in, &text, STDIN_FILENO, "<stdin>"))
 			return ERROR;
+		conflict_marker_size = get_conflict_marker_size(".");
 	} else {
 		close_fd = 1;
 		fd = open(fname, O_RDWR);
@@ -585,9 +676,10 @@ rediff(const char *fname)
 			weprintf("lseek %s 0 SEEK_SET:", fname);
 			return ERROR;
 		}
+		conflict_marker_size = get_conflict_marker_size(fname);
 	}
 
-	ret = rediff_file(&text_out, &text_in, fname);
+	ret = rediff_file(&text_out, &text_in, conflict_marker_size, fname);
 	if (ret == ERROR) {
 		ret = ERROR;
 		goto out;
