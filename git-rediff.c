@@ -113,7 +113,7 @@ line_is_marker(struct line *line, char marker_symbol, size_t conflict_marker_siz
 		if (line->text[i] != marker_symbol)
 			return 0;
 
-	return i == line->len || line->text[i] == ' ' || line->text[i] == '\n';
+	return i == line->len || line->text[i] == ' ' || line->text[i] == '\n' || line->text[i] == '\r';
 }
 
 static void
