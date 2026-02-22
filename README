@@ -20,7 +20,7 @@ OPERANDS
 EXIT STATUS
 	The following exit values are returned:
 
-	0    All merge conflicts where resolved.
+	0    All merge conflicts were resolved.
 
 	1    There are still merge conflicts.
 
