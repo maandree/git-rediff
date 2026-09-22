@@ -1,0 +1,11 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} only" \
+	only \
+	"${END} only"
+
+cp -- file file.expected
+
+error --merge --no-reduce file

@@ -1,0 +1,27 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	common-first \
+	common-second \
+	common-third \
+	"${PARENT} 2" \
+	common-first \
+	common-second \
+	common-third \
+	"${PARENT} 3" \
+	common-first \
+	common-second \
+	common-third \
+	"${TAIL} 4" \
+	common-first \
+	common-second \
+	common-third \
+	"${END} 4"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

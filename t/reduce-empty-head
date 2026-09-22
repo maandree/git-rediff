@@ -1,0 +1,16 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	"${PARENT} base" \
+	common \
+	"${TAIL}" \
+	common \
+	"${END} theirs"
+
+cp -- file file.expected
+
+conflict --reduce file
+
+also_interactive r

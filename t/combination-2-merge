@@ -1,0 +1,20 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	ours \
+	"${PARENT} base" \
+	same \
+	base \
+	"${TAIL}" \
+	same \
+	ours \
+	"${END} theirs"
+
+cp -- file file.expected
+
+conflict --merge --merge --no-reduce file
+
+also_interactive m

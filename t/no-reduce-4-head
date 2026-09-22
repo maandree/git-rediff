@@ -1,0 +1,31 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	head-common-first \
+	head-common-second \
+	branch-1-first \
+	branch-1-second \
+	"${PARENT} 2" \
+	head-common-first \
+	head-common-second \
+	branch-2-first \
+	branch-2-second \
+	"${PARENT} 3" \
+	head-common-first \
+	head-common-second \
+	branch-3-first \
+	branch-3-second \
+	"${TAIL} 4" \
+	head-common-first \
+	head-common-second \
+	branch-4-first \
+	branch-4-second \
+	"${END} 4"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

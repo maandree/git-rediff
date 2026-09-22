@@ -1,0 +1,20 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' text > file
+cp -- file file.expected
+
+error --merge --select-head file
+error --select-head --merge file
+error --merge --select-tail file
+error --select-tail --merge file
+error --select-head --select-tail file
+error --select-tail --select-head file
+error --merge --select-head --select-tail file
+error --merge --select-tail --select-head file
+error --select-head --merge --select-tail file
+error --select-head --select-tail --merge file
+error --select-tail --merge --select-head file
+error --select-tail --select-head --merge file
+error --unknown-option file
+error '-$' file

@@ -1,0 +1,17 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} HEAD" \
+	same \
+	head \
+	"${TAIL}" \
+	same \
+	tail \
+	"${END} branch"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

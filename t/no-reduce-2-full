@@ -1,0 +1,19 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	common-first \
+	common-second \
+	common-third \
+	"${TAIL} 2" \
+	common-first \
+	common-second \
+	common-third \
+	"${END} 2"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

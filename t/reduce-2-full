@@ -1,0 +1,22 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	common-first \
+	common-second \
+	common-third \
+	"${TAIL} 2" \
+	common-first \
+	common-second \
+	common-third \
+	"${END} 2"
+
+printf '%s\n' > file.expected \
+	common-first \
+	common-second \
+	common-third
+
+normal --reduce file
+
+also_interactive r

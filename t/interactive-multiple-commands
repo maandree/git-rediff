@@ -1,0 +1,113 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	head \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	tail \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	head \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	tail \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	head \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	tail \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	first \
+	"${PARENT} base" \
+	not first \
+	"${TAIL}" \
+	not first \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours \
+	common \
+	"${PARENT} base" \
+	base \
+	common \
+	"${TAIL}" \
+	theirs \
+	common \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	head \
+	tail \
+	"${HEAD} ours" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} theirs" \
+	first \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs" \
+	common
+
+(
+	interactive_marker "${HEAD} ours"
+	interactive_side head
+	interactive_marker "${PARENT} base"
+	interactive_base base
+	interactive_marker "${TAIL}"
+	interactive_side tail
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 5
+	interactive_marker "${HEAD} ours"
+	interactive_side head
+	interactive_marker "${PARENT} base"
+	interactive_base base
+	interactive_marker "${TAIL}"
+	interactive_side tail
+	interactive_marker "${END} theirs"
+	interactive_prompt 2 5
+	interactive_marker "${HEAD} ours"
+	interactive_side head
+	interactive_marker "${PARENT} base"
+	interactive_base base
+	interactive_marker "${TAIL}"
+	interactive_side tail
+	interactive_marker "${END} theirs"
+	interactive_prompt 3 5
+	interactive_marker "${HEAD} ours"
+	interactive_side first
+	interactive_marker "${PARENT} base"
+	interactive_base not
+	interactive_base first
+	interactive_marker "${TAIL}"
+	interactive_side not
+	interactive_side first
+	interactive_marker "${END} theirs"
+	interactive_prompt 4 5
+	interactive_marker "${HEAD} ours"
+	interactive_side ours
+	interactive_side common
+	interactive_marker "${PARENT} base"
+	interactive_base base
+	interactive_base common
+	interactive_marker "${TAIL}"
+	interactive_side theirs
+	interactive_side common
+	interactive_marker "${END} theirs"
+	interactive_prompt 5 5
+) > output.expected
+
+printf '%s' htbmr > input
+conflict --interactive file 8<input 9>output
+diff -u -- output.expected output >&2

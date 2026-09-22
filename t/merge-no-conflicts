@@ -1,0 +1,11 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	no conflicts
+
+cp -- file file.expected
+
+normal --merge --no-reduce file
+
+also_interactive ''

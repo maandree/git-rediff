@@ -1,0 +1,18 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} a" \
+	same \
+	"${PARENT} b" \
+	same \
+	"${TAIL}" \
+	different \
+	"${END} c"
+
+printf '%s\n' > file.expected \
+	different
+
+normal --merge --no-reduce file
+
+also_interactive m

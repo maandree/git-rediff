@@ -1,0 +1,22 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	ours \
+	"${PARENT} base" \
+	same \
+	base \
+	"${TAIL}" \
+	same \
+	theirs \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	same \
+	ours
+
+normal --select-head --select-head --no-reduce file
+
+also_interactive h

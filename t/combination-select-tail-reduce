@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	not first \
+	"${PARENT} base" \
+	not first \
+	"${TAIL}" \
+	first \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours \
+	common \
+	"${PARENT} base" \
+	base \
+	common \
+	"${TAIL}" \
+	theirs \
+	common \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	first \
+	theirs \
+	common
+
+normal --select-tail --reduce file
+
+also_interactive tt

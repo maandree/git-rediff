@@ -1,0 +1,28 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	ours \
+	"${PARENT} base" \
+	same \
+	base \
+	"${TAIL}" \
+	same \
+	theirs \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	same \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs"
+
+conflict --select-head --no-select-head --no-select-head file
+
+also_interactive rr

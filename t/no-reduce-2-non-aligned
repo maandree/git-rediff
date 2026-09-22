@@ -1,0 +1,27 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	before-common-first \
+	before-common-second \
+	head-only-first \
+	head-only-second \
+	middle-common-first \
+	middle-common-second \
+	head-last \
+	"${TAIL} 2" \
+	before-common-first \
+	before-common-second \
+	tail-only \
+	middle-common-first \
+	middle-common-second \
+	tail-last-first \
+	tail-last-second \
+	"${END} 2"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

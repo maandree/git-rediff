@@ -1,0 +1,64 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} theirs"
+
+for editor in EDITOR VISUAL CORE_EDITOR REDIFF_EDITOR GIT_EDITOR; do
+	printf '%s\n' > "${editor}" \
+		'#!/bin/sh -e' \
+		'printf "%s\\n" "$(basename -- "$0")" > "$1"'
+	chmod +x -- "$editor"
+done
+
+printf '%s\n' \
+	'#!/bin/sh -e' \
+	'printf "%s\\n" vi > "$1"' > ./vi
+chmod +x ./vi
+
+(
+	interactive_marker "${HEAD} ours"
+	interactive_side head
+	interactive_marker "${TAIL}"
+	interactive_side tail
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 1
+) > output.expected
+
+run_editor_test () {
+	printf '%s\n' "$1" > file.expected
+	shift 1
+
+	unset GIT_EDITOR VISUAL EDITOR
+	git config --local --unset-all core.editor || :
+	git config --local --unset-all rediff.editor || :
+
+	while test ! $# = 0; do
+		if test "$1" = VI; then
+			export PATH=".:${PATH}"
+		elif test "$1" = CORE_EDITOR; then
+			git config core.editor ./CORE_EDITOR
+		elif test "$1" = REDIFF_EDITOR; then
+			git config rediff.editor ./REDIFF_EDITOR
+		else
+			eval "export $1=./$1"
+		fi
+		shift 1
+	done
+	printf '%s' e > input
+	normal --interactive file 8<input 9>output
+	diff -u -- output.expected output >&2
+	again_command=''
+}
+
+run_editor_test vi            VI
+run_editor_test EDITOR        EDITOR
+run_editor_test VISUAL        EDITOR VISUAL
+run_editor_test CORE_EDITOR   EDITOR VISUAL CORE_EDITOR
+run_editor_test REDIFF_EDITOR EDITOR VISUAL CORE_EDITOR REDIFF_EDITOR
+run_editor_test GIT_EDITOR    EDITOR VISUAL CORE_EDITOR REDIFF_EDITOR GIT_EDITOR

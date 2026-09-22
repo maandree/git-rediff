@@ -1,0 +1,26 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${TAIL}" \
+	first \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	first
+
+printf '%s\n' > file2 \
+	"${HEAD} ours" \
+	second \
+	"${TAIL}" \
+	second \
+	"${END} theirs"
+
+printf '%s\n' > file2.expected \
+	second
+
+normal --reduce file file2
+
+also_interactive rr

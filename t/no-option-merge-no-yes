@@ -1,0 +1,18 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	old \
+	"${PARENT} base" \
+	old \
+	"${TAIL}" \
+	new \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	new
+
+normal --no-merge --merge --no-reduce file
+
+also_interactive m

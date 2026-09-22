@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > first \
+	"${HEAD} first" \
+	first-head \
+	"${TAIL}" \
+	first-tail \
+	"${END}"
+
+printf '%s\n' > first.expected \
+	first-tail
+
+printf '%s\n' > second \
+	before \
+	"${HEAD} second" \
+	second-head \
+	"${PARENT} middle" \
+	second-middle \
+	"${TAIL}" \
+	second-tail \
+	"${END}"
+
+printf '%s\n' > second.expected \
+	before \
+	second-tail
+
+normal --select-tail --no-reduce first second
+
+also_interactive tt

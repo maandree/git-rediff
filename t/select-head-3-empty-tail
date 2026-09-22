@@ -1,0 +1,17 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} o" \
+	ours \
+	"${PARENT} b" \
+	base \
+	"${TAIL}" \
+	"${END} t"
+
+printf '%s\n' > file.expected \
+	ours
+
+normal --select-head --no-reduce file
+
+also_interactive h

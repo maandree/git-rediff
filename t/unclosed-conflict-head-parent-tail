@@ -1,0 +1,16 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} a" \
+	first \
+	"${PARENT} b" \
+	middle \
+	"${TAIL}" \
+	broken
+
+cp -- file file.original
+
+error file
+
+diff -u -- file file.original >&2

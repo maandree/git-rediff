@@ -1,0 +1,17 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} OURS" \
+	"${PARENT} BASE" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} THEIRS"
+
+printf '%s\n' > file.expected \
+	theirs
+
+normal --select-tail --no-reduce file
+
+also_interactive t

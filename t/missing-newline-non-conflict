@@ -1,0 +1,10 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s' 'non-conflict without newline' > file
+
+cp -- file file.expected
+
+normal file
+
+also_interactive ''

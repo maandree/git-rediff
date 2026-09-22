@@ -1,0 +1,28 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	same \
+	"${PARENT} 2" \
+	different \
+	"${PARENT} 3" \
+	same \
+	"${TAIL}" \
+	same \
+	"${END} 4"
+
+printf '%s\n' > file.expected \
+	"${HEAD} 1" \
+	same \
+	"${PARENT} 2" \
+	different \
+	"${PARENT} 3" \
+	same \
+	"${TAIL}" \
+	same \
+	"${END} 4"
+
+conflict --merge --no-reduce file
+
+also_interactive m

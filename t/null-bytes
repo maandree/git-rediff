@@ -1,0 +1,15 @@
+#!/bin/sh -e
+. t/common.sh
+
+(
+	printf '%s\n' "${HEAD} ours"
+	printf 'same\000text\n'
+	printf '%s\n' "${TAIL}"
+	printf 'same\000text\n'
+	printf '%s\n' "${END} theirs"
+) > file
+
+printf 'same\000text\n' > file.expected
+
+"$command" --reduce file
+cmp -s -- file file.expected

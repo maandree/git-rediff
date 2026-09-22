@@ -1,0 +1,28 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	ours \
+	"${PARENT} base" \
+	same \
+	base \
+	"${TAIL}" \
+	same \
+	ours \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	same \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	ours \
+	"${END} theirs"
+
+conflict --merge --no-merge --no-merge file
+
+also_interactive rr

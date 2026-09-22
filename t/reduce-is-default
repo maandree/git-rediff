@@ -1,0 +1,23 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} HEAD" \
+	same \
+	head \
+	"${TAIL}" \
+	same \
+	tail \
+	"${END} branch"
+
+printf '%s\n' > file.expected \
+	same \
+	"${HEAD} HEAD" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} branch"
+
+conflict file
+
+also_interactive rr

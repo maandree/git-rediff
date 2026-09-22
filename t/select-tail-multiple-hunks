@@ -1,0 +1,28 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} first" \
+	first-head \
+	"${TAIL}" \
+	first-tail \
+	"${END}" \
+	between \
+	"${HEAD} second" \
+	second-head \
+	"${PARENT} middle" \
+	second-middle \
+	"${TAIL}" \
+	second-tail \
+	"${END}" \
+	after
+
+printf '%s\n' > file.expected \
+	first-tail \
+	between \
+	second-tail \
+	after
+
+normal --select-tail --no-reduce file
+
+also_interactive tt

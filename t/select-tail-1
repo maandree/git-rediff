@@ -1,0 +1,12 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} Tail" \
+	tail \
+	"${END} Tail"
+
+printf '%s\n' > file.expected \
+	tail
+
+error --select-tail --no-reduce file

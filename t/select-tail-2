@@ -1,0 +1,16 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} head" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} tail"
+
+printf '%s\n' > file.expected \
+	tail
+
+normal --select-tail --no-reduce file
+
+also_interactive t

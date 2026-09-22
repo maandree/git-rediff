@@ -1,0 +1,21 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${TAIL}" \
+	first \
+	"${END} theirs" \
+	between \
+	"${HEAD} ours" \
+	second \
+	"${TAIL}" \
+	second \
+	"${END} theirs"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive ss

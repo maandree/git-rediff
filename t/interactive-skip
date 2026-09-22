@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	"${HEAD} ours" \
+	head \
+	"${TAIL}" \
+	tail \
+	"${END} theirs"
+
+(
+	interactive_marker "${HEAD} ours"
+	interactive_side head
+	interactive_marker "${TAIL}"
+	interactive_side tail
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 1
+) > output.expected
+
+printf '%s' s > input
+conflict --interactive file 8<input 9>output
+diff -u -- output.expected output >&2

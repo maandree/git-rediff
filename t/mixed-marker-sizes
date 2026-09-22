@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+
+set_conflict_marker_size 3 small
+
+printf '%s\n' > small \
+	"${HEAD} small-head" \
+	shared \
+	"${TAIL}" \
+	shared \
+	"${END} small-tail"
+
+printf '%s\n' > small.expected \
+	shared
+
+set_conflict_marker_size 10 large
+
+printf '%s\n' > large \
+	"${HEAD} large-head" \
+	shared \
+	"${TAIL}" \
+	shared \
+	"${END} large-tail"
+
+printf '%s\n' > large.expected \
+	shared
+
+normal small large
+
+also_interactive rr

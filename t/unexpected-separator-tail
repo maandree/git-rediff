@@ -1,0 +1,11 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${TAIL}"
+
+cp -- file file.original
+
+error file
+
+diff -u -- file file.original >&2

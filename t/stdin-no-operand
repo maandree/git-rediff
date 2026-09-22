@@ -1,0 +1,21 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} HEAD" \
+	same \
+	"${TAIL}" \
+	same \
+	"${END} branch"
+
+printf '%s\n' > file.expected \
+	same
+
+cp -- file input
+normal --reduce < input > output
+cmp -s -- file input
+diff -u -- output file.expected >&2
+
+also_interactive r < input > output
+cmp -s -- file input
+diff -u -- output file.expected >&2

@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > first \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} base" \
+	same \
+	"${TAIL}" \
+	first-different \
+	"${END} theirs"
+
+printf '%s\n' > first.expected \
+	first-different
+
+printf '%s\n' > second \
+	"${HEAD} ours" \
+	second-different \
+	"${PARENT} base" \
+	same \
+	"${TAIL}" \
+	same \
+	"${END} theirs"
+
+printf '%s\n' > second.expected \
+	second-different
+
+normal --merge --no-reduce first second
+
+also_interactive mm

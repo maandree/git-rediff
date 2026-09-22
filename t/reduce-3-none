@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	branch-1-first \
+	branch-1-second \
+	"${PARENT} 2" \
+	branch-2-first \
+	branch-2-second \
+	"${TAIL} 3" \
+	branch-3-first \
+	branch-3-second \
+	"${END} 3"
+
+printf '%s\n' > file.expected \
+	"${HEAD} 1" \
+	branch-1-first \
+	branch-1-second \
+	"${PARENT} 2" \
+	branch-2-first \
+	branch-2-second \
+	"${TAIL} 3" \
+	branch-3-first \
+	branch-3-second \
+	"${END} 3"
+
+conflict --reduce file
+
+also_interactive rr

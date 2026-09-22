@@ -1,0 +1,16 @@
+#!/bin/sh -e
+. t/common.sh
+
+set_conflict_marker_size 3 file
+
+printf '%s\n' > file \
+	'<<<< not a marker' \
+	'|||| not a marker' \
+	'==== not a marker' \
+	'>>>> not a marker'
+
+cp -- file file.expected
+
+normal file
+
+also_interactive ''

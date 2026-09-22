@@ -1,0 +1,44 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	ours-1 \
+	"${TAIL}" \
+	theirs-1 \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	theirs-1
+
+printf '%s\n' > file2 \
+	"${HEAD} ours" \
+	ours-2 \
+	"${TAIL}" \
+	theirs-2 \
+	"${END} theirs"
+
+printf '%s\n' > file2.expected \
+	ours-2
+
+(
+	interactive_filename file
+	interactive_marker "${HEAD} ours"
+	interactive_side ours-1
+	interactive_marker "${TAIL}"
+	interactive_side theirs-1
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 1
+	interactive_filename file2
+	interactive_marker "${HEAD} ours"
+	interactive_side ours-2
+	interactive_marker "${TAIL}"
+	interactive_side theirs-2
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 1
+) > output.expected
+
+printf '%s' th > input
+normal --interactive file file2 8<input 9>output
+diff -u -- output.expected output >&2

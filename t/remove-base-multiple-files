@@ -1,0 +1,33 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > first \
+	"${HEAD} first" \
+	first-head \
+	"${TAIL}" \
+	first-tail \
+	"${END}"
+
+cp -- first first.expected
+
+printf '%s\n' > second \
+	before \
+	"${HEAD} second" \
+	second-head \
+	"${PARENT} middle" \
+	second-middle \
+	"${TAIL}" \
+	second-tail \
+	"${END}"
+
+printf '%s\n' > second.expected \
+	before \
+	"${HEAD} second" \
+	second-head \
+	"${TAIL}" \
+	second-tail \
+	"${END}"
+
+conflict --remove-base --no-reduce first second
+
+also_interactive bbb

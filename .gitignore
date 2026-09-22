@@ -12,4 +12,7 @@
 *.gcov
 *.gcno
 *.gcda
+*.t
+*.to
 /git-rediff
+/testdir.*

@@ -1,0 +1,20 @@
+#!/bin/sh -e
+. t/common.sh
+
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	ours
+
+printf '%s' h > input
+
+normal --no-interactive --interactive --no-reduce file 8<input 9>output

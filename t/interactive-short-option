@@ -1,0 +1,46 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	ours-1 \
+	"${PARENT} base" \
+	base-1 \
+	"${TAIL}" \
+	theirs-1 \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours-2 \
+	"${PARENT} base" \
+	base-2 \
+	"${TAIL}" \
+	theirs-2 \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	theirs-1 \
+	ours-2
+
+(
+	interactive_marker "${HEAD} ours"
+	interactive_side ours-1
+	interactive_marker "${PARENT} base"
+	interactive_base base-1
+	interactive_marker "${TAIL}"
+	interactive_side theirs-1
+	interactive_marker "${END} theirs"
+	interactive_prompt 1 2
+	interactive_marker "${HEAD} ours"
+	interactive_side ours-2
+	interactive_marker "${PARENT} base"
+	interactive_base base-2
+	interactive_marker "${TAIL}"
+	interactive_side theirs-2
+	interactive_marker "${END} theirs"
+	interactive_prompt 2 2
+) > output.expected
+
+printf '%s' th > input
+normal -i file 8<input 9>output
+diff -u -- output.expected output >&2

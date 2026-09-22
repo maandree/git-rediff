@@ -1,0 +1,11 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	no conflicts in this file
+
+cp -- file file.expected
+
+normal --remove-base --no-reduce file
+
+also_interactive ''

@@ -1,0 +1,46 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	branch-1-first \
+	branch-1-second \
+	tail-common-first \
+	tail-common-second \
+	"${PARENT} 2" \
+	branch-2-first \
+	branch-2-second \
+	tail-common-first \
+	tail-common-second \
+	"${PARENT} 3" \
+	branch-3-first \
+	branch-3-second \
+	tail-common-first \
+	tail-common-second \
+	"${TAIL} 4" \
+	branch-4-first \
+	branch-4-second \
+	tail-common-first \
+	tail-common-second \
+	"${END} 4"
+
+printf '%s\n' > file.expected \
+	"${HEAD} 1" \
+	branch-1-first \
+	branch-1-second \
+	"${PARENT} 2" \
+	branch-2-first \
+	branch-2-second \
+	"${PARENT} 3" \
+	branch-3-first \
+	branch-3-second \
+	"${TAIL} 4" \
+	branch-4-first \
+	branch-4-second \
+	"${END} 4" \
+	tail-common-first \
+	tail-common-second
+
+conflict --reduce file
+
+also_interactive rr

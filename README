@@ -2,11 +2,86 @@ NAME
 	git-rediff - Reduce partially resolved merge conflicts
 
 SYNOPSIS
-	git rediff [<path>...]
+	git rediff [--no-reduce] [--merge|--select-head|--select-tail] [--remove-base] [-i] [<path>...]
 
 DESCRIPTION
 	git rediff rewrites files containing merge conflicts to
 	remove conflicts that have been resolved.
+
+OPTIONS
+	-i
+	--interactive
+		Interactively select the action for each merge conflict.
+		See INTERACTIVE COMMANDS.
+
+		This overrides all other options.
+
+	--no-interactive
+		Disable --interactive.
+
+	-m
+	--merge
+		For conflicts with at least three branches, select the sole branch
+		whose content differs from all other identical branches, but only
+		if that is the top or bottom branch.
+
+		Applied before --remove-base.
+
+	--no-merge
+		Disable --merge.
+
+	--reduce
+		Enable reduction of remaining conflicts. (Default)
+
+	--no-reduce
+		Do not reduce remaining conflicts after --merge, --remove-base,
+		--select-head, and --select-tail have been applied.
+
+	--remove-base
+		Remove the middle branch from three-way merge conflicts.
+
+		Applied before --reduce.
+
+	--no-remove-base
+		Disable --remove-base.
+
+	--select-head
+		Resolve each merge conflict by selecting its top branch.
+
+		Applied before --reduce.
+
+	--no-select-head
+		Disable --select-head.
+
+	--select-tail
+		Resolve each merge conflict by selecting its bottom branch.
+
+		Applied before --reduce.
+
+	--no-select-tail
+		Disable --select-tail.
+
+
+INTERACTIVE COMMANDS
+	h	Select the top branch.
+
+	t	Select the bottom branch.
+
+	b	Remove the middle branch (three-way conflicts only).
+
+	m	Apply merge selection.
+
+	r	Reduce the conflict.
+
+	e	Manually edit the conflict.
+
+	s	Skip the conflict.
+
+	d	Skip the conflict and all later conflicts in the current file.
+
+	q	Quit interaction and skip the conflict and all remaining conflicts.
+
+	?	Display help.
 
 OPERANDS
 	path

@@ -1,0 +1,20 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	"${HEAD} ours" \
+	ours \
+	"${TAIL}" \
+	"${END} theirs"
+
+conflict --remove-base --no-reduce file
+
+also_interactive bb

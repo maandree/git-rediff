@@ -1,0 +1,21 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} head" \
+	head \
+	"${PARENT} 2" \
+	second \
+	"${PARENT} 3" \
+	third \
+	"${PARENT} 4" \
+	fourth \
+	"${TAIL}" \
+	tail \
+	"${END} tail"
+
+cp -- file file.expected
+
+conflict --remove-base --no-reduce file
+
+also_interactive b

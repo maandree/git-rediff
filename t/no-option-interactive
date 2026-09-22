@@ -1,0 +1,30 @@
+#!/bin/sh -e
+. t/common.sh
+interactive
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	ours \
+	"${PARENT} base" \
+	same \
+	base \
+	"${TAIL}" \
+	same \
+	theirs \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	same \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs"
+
+printf '%s' q > input
+
+conflict --no-interactive file 8<input 9>output
+test ! -s output

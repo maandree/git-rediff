@@ -1,0 +1,24 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${TAIL}" \
+	first \
+	"${END} theirs" \
+	between \
+	"${HEAD} ours" \
+	second \
+	"${TAIL}" \
+	second \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	first \
+	between \
+	second
+
+normal --reduce file
+
+also_interactive rr

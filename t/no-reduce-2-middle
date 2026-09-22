@@ -1,0 +1,25 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	branch-1-before-first \
+	branch-1-before-second \
+	middle-common-first \
+	middle-common-second \
+	branch-1-after-first \
+	branch-1-after-second \
+	"${TAIL} 2" \
+	branch-2-before-first \
+	branch-2-before-second \
+	middle-common-first \
+	middle-common-second \
+	branch-2-after-first \
+	branch-2-after-second \
+	"${END} 2"
+
+cp -- file file.expected
+
+conflict --no-reduce file
+
+also_interactive s

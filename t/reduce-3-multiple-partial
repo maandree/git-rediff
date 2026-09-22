@@ -1,0 +1,70 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	head-common-first \
+	head-common-second \
+	branch-1-first-a \
+	branch-1-first-b \
+	middle-common-first \
+	middle-common-second \
+	branch-1-second-a \
+	branch-1-second-b \
+	tail-common-first \
+	tail-common-second \
+	"${PARENT} 2" \
+	head-common-first \
+	head-common-second \
+	branch-2-first-a \
+	branch-2-first-b \
+	middle-common-first \
+	middle-common-second \
+	branch-2-second-a \
+	branch-2-second-b \
+	tail-common-first \
+	tail-common-second \
+	"${TAIL} 3" \
+	head-common-first \
+	head-common-second \
+	branch-3-first-a \
+	branch-3-first-b \
+	middle-common-first \
+	middle-common-second \
+	branch-3-second-a \
+	branch-3-second-b \
+	tail-common-first \
+	tail-common-second \
+	"${END} 3"
+
+printf '%s\n' > file.expected \
+	head-common-first \
+	head-common-second \
+	"${HEAD} 1" \
+	branch-1-first-a \
+	branch-1-first-b \
+	"${PARENT} 2" \
+	branch-2-first-a \
+	branch-2-first-b \
+	"${TAIL} 3" \
+	branch-3-first-a \
+	branch-3-first-b \
+	"${END} 3" \
+	middle-common-first \
+	middle-common-second \
+	"${HEAD} 1" \
+	branch-1-second-a \
+	branch-1-second-b \
+	"${PARENT} 2" \
+	branch-2-second-a \
+	branch-2-second-b \
+	"${TAIL} 3" \
+	branch-3-second-a \
+	branch-3-second-b \
+	"${END} 3" \
+	tail-common-first \
+	tail-common-second
+
+conflict --reduce file
+
+also_interactive rrr

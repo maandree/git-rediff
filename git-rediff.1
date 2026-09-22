@@ -2,12 +2,116 @@
 .SH NAME
 git-rediff - Reduce partially resolved merge conflicts
 .SH SYNOPSIS
-.I git rediff
-[<path>...]
+.B git rediff
+.RB [ --no-reduce ]
+.RB [ --merge | --select-head | --select-tail ]
+.RB [ --remove-base ]
+.RB [ -i ]
+.RI [ <path> "...]"
 .SH DESCRIPTION
-.I git rediff
+.B git rediff
 rewrites files containing merge conflicts to
 remove conflicts that have been resolved.
+.SH OPTIONS
+.TP
+.B -i
+.TQ
+.B --interactive
+Interactively select the action for each merge conflict. See
+.BR "INTERACTIVE COMMANDS" .
+
+This overrides all other options.
+.TP
+.B --no-interactive
+Disable
+.BR --interactive .
+.TP
+.B -m
+.TQ
+.B --merge
+For conflicts with at least three branches, select the sole branch
+whose content differs from all other identical branches, but only
+if that is the top or bottom branch.
+
+Applied before
+.BR --remove-base .
+.TP
+.B --no-merge
+Disable
+.BR --merge .
+.TP
+.B --reduce
+Enable reduction of remaining conflicts. (Default)
+.TP
+.B --no-reduce
+Do not reduce remaining conflicts after
+.BR --merge ,
+.BR --remove-base ,
+.BR --select-head ,
+and
+.B --select-tail
+have been applied.
+.TP
+.B --remove-base
+Remove the middle branch from three-way merge conflicts.
+
+Applied before
+.BR --reduce .
+.TP
+.B --no-remove-base
+Disable
+.BR --remove-base .
+.TP
+.B --select-head
+Resolve each merge conflict by selecting its top branch.
+
+Applied before
+.BR --reduce .
+.TP
+.B --no-select-head
+Disable
+.BR --select-head .
+.TP
+.B --select-tail
+Resolve each merge conflict by selecting its bottom branch.
+
+Applied before
+.BR --reduce .
+.TP
+.B --no-select-tail
+Disable
+.BR --select-tail .
+.SH INTERACTIVE COMMANDS
+.TP
+.B h
+Select the top branch.
+.TP
+.B t
+Select the bottom branch.
+.TP
+.B b
+Remove the middle branch (three-way conflicts only).
+.TP
+.B m
+Apply merge selection.
+.TP
+.B r
+Reduce the conflict.
+.TP
+.B e
+Manually edit the conflict.
+.TP
+.B s
+Skip the conflict.
+.TP
+.B d
+Skip the conflict and all later conflicts in the current file.
+.TP
+.B q
+Quit interaction and skip the conflict and all remaining conflicts.
+.TP
+.B ?
+Display help.
 .SH OPERANDS
 .TP
 .I path

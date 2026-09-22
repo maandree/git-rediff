@@ -1,0 +1,9 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	same \
+	"${END} 1"
+
+error --reduce file

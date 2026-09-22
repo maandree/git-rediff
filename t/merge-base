@@ -1,0 +1,17 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} a" \
+	same \
+	"${PARENT} b" \
+	different \
+	"${TAIL}" \
+	same \
+	"${END} c"
+
+cp -- file file.expected
+
+conflict --merge --no-reduce file
+
+also_interactive m

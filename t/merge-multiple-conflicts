@@ -1,0 +1,34 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	before \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} base" \
+	same \
+	"${TAIL}" \
+	different-three \
+	"${END} theirs" \
+	between \
+	"${HEAD} ours" \
+	different-four \
+	"${PARENT} base" \
+	same \
+	"${PARENT} other" \
+	same \
+	"${TAIL}" \
+	same \
+	"${END} theirs" \
+	after
+
+printf '%s\n' > file.expected \
+	before \
+	different-three \
+	between \
+	different-four \
+	after
+
+normal --merge --no-reduce file
+
+also_interactive mm

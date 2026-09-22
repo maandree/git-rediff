@@ -1,0 +1,36 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${PARENT} base" \
+	not first \
+	"${TAIL}" \
+	not first \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours \
+	common \
+	"${PARENT} base" \
+	base \
+	common \
+	"${TAIL}" \
+	theirs \
+	common \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	first \
+	"${HEAD} ours" \
+	ours \
+	"${PARENT} base" \
+	base \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs" \
+	common
+
+conflict --merge --reduce file
+
+also_interactive mm

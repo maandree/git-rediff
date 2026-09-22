@@ -1,0 +1,24 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${TAIL}" \
+	first \
+	"${END} theirs"
+
+cp -- file file.expected
+
+printf '%s\n' > file2 \
+	"${HEAD} ours" \
+	second \
+	"${TAIL}" \
+	second \
+	"${END} theirs"
+
+cp -- file2 file2.expected
+
+conflict --no-reduce file file2
+
+also_interactive ss
