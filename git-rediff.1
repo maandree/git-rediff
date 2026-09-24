@@ -3,9 +3,9 @@
 git-rediff - Reduce partially resolved merge conflicts
 .SH SYNOPSIS
 .B git rediff
-.RB [ --no-reduce ]
-.RB [ --merge | --select-head | --select-tail ]
+.RB [ --merge | --symmetric | --select-head | --select-tail ]
 .RB [ --remove-base ]
+.RB [ --no-reduce ]
 .RB [ -i ]
 .RI [ <path> "...]"
 .SH DESCRIPTION
@@ -40,6 +40,21 @@ Applied before
 Disable
 .BR --merge .
 .TP
+.B -y
+.TQ
+.B --symmetric
+When the top and bottom branches are identical, select their
+content if all other branches are identical to each other.
+
+Applied before
+.BR --reduce .
+.TP
+.B --no-symmetric
+Disable
+.BR --symmetric .
+.TP
+.B -r
+.TQ
 .B --reduce
 Enable reduction of remaining conflicts. (Default)
 .TP
@@ -94,6 +109,9 @@ Remove the middle branch (three-way conflicts only).
 .TP
 .B m
 Apply merge selection.
+.TP
+.B y
+Select symmetric branches.
 .TP
 .B r
 Reduce the conflict.

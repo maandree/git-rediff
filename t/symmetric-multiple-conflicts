@@ -1,0 +1,42 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	before \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} base" \
+	different-interior \
+	"${TAIL}" \
+	same \
+	"${END} theirs" \
+	between \
+	"${HEAD} ours" \
+	different-head \
+	"${PARENT} base" \
+	interior \
+	"${PARENT} other" \
+	interior \
+	"${TAIL}" \
+	same \
+	"${END} theirs" \
+	after
+
+printf '%s\n' > file.expected \
+	before \
+	same \
+	between \
+	"${HEAD} ours" \
+	different-head \
+	"${PARENT} base" \
+	interior \
+	"${PARENT} other" \
+	interior \
+	"${TAIL}" \
+	same \
+	"${END} theirs" \
+	after
+
+conflict --symmetric --no-reduce file
+
+also_interactive yy

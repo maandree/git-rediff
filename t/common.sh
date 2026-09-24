@@ -141,7 +141,7 @@ interactive_filename () {
 
 interactive_prompt () {
 	test $# = 2
-	printf '\e[1;34m(%s/%s) Resolve this conflict [h,t,b,m,r,e,s,d,q,?]? \e[0m\n' "$1" "$2"
+	printf '\e[1;34m(%s/%s) Resolve this conflict [h,t,b,m,y,r,e,s,d,q,?]? \e[0m\n' "$1" "$2"
 }
 
 interactive_help () {
@@ -155,6 +155,7 @@ interactive_help () {
 	fi
 	printf '%s\n' \
 		'm - merge' \
+		'y - select symmetric branches' \
 		'r - reduce' \
 		'e - manually edit this hunk' \
 		's - skip this hunk' \

@@ -1,0 +1,23 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} 2" \
+	common \
+	first \
+	common \
+	"${PARENT} 3" \
+	common \
+	second \
+	common \
+	"${TAIL}" \
+	same \
+	"${END} theirs"
+
+cp -- file file.expected
+
+conflict --symmetric --no-reduce file
+
+also_interactive y

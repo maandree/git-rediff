@@ -8,7 +8,7 @@
 #include <signal.h>
 #include <termios.h>
 
-NUSAGE(2, "[--no-reduce] [--merge|--select-head|--select-tail] [--remove-base] [-i] [<path>...]");
+NUSAGE(2, "[--merge|--symmetric|--select-head|--select-tail] [--remove-base] [--no-reduce] [-i] [<path>...]");
 
 #if defined(__clang__)
 # pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
@@ -41,6 +41,7 @@ static int ttyfd_out = -1;
 #endif
 static struct stat tty_st;
 static int merge = 0;
+static int symmetric = 0;
 static int remove_base = 0;
 static int select_head = 0;
 static int select_tail = 0;
@@ -552,6 +553,7 @@ display_help(size_t nsubhunks)
 	if (nsubhunks == 3U)
 		dprintf(ttyfd_out, "b - remove base\n");
 	dprintf(ttyfd_out, "m - merge\n");
+	dprintf(ttyfd_out, "y - select symmetric branches\n");
 	dprintf(ttyfd_out, "r - reduce\n");
 	dprintf(ttyfd_out, "e - manually edit this hunk\n");
 	dprintf(ttyfd_out, "s - skip this hunk\n");
@@ -627,7 +629,7 @@ get_command(size_t nsubhunks, size_t number, size_t total)
 	int matched = 0;
 
 again:
-	dprintf(ttyfd_out, "\033[1;34m(%zu/%zu) Resolve this conflict [h,t,b,m,r,e,s,d,q,?]? \033[0m", number, total);
+	dprintf(ttyfd_out, "\033[1;34m(%zu/%zu) Resolve this conflict [h,t,b,m,y,r,e,s,d,q,?]? \033[0m", number, total);
 
 	for (;;) {
 		n = read(ttyfd_in, &c, 1);
@@ -653,6 +655,7 @@ again:
 	matched |= select_head = c == 'h';
 	matched |= select_tail = c == 't';
 	matched |= merge       = c == 'm';
+	matched |= symmetric   = c == 'y';
 	matched |= reduce      = c == 'r';
 	matched |= remove_base = c == 'b';
 	matched |= /* skip = */  c == 's';
@@ -805,6 +808,14 @@ rediff_hunk(struct text *resp, const struct hunk *hunk, const struct line *tail)
 			append_text(resp, &hunk->subs[hunk->nsubs - 1U].text);
 		else
 			goto genuine_conflict;
+		return MERGED;
+	} else if (symmetric) {
+		if (!texts_equal(&hunk->subs[0].text, &hunk->subs[hunk->nsubs - 1U].text))
+			goto genuine_conflict;
+		for (i = 2U; i < hunk->nsubs - 1U; i++)
+			if (!texts_equal(&hunk->subs[i].text, &hunk->subs[1U].text))
+				goto genuine_conflict;
+		append_text(resp, &hunk->subs[0].text);
 		return MERGED;
 	}
 genuine_conflict:
@@ -1134,8 +1145,12 @@ main(int argc, char *argv[])
 			case 'm': merge = 1;
 		else if (TESTLONG("--no-merge", 0))
 			merge = 0;
+		else if (TESTLONG("--symmetric", 0))
+			case 'y': symmetric = 1;
+		else if (TESTLONG("--no-symmetric", 0))
+			symmetric = 0;
 		else if (TESTLONG("--reduce", 0))
-			reduce = 1;
+			case 'r': reduce = 1;
 		else if (TESTLONG("--no-reduce", 0))
 			reduce = 0;
 		else if (TESTLONG("--remove-base", 0))
@@ -1157,7 +1172,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (merge + select_head + select_tail > 1)
+	if (merge + symmetric + select_head + select_tail > 1)
 		usage();
 
 	originally_interactive = interactive;

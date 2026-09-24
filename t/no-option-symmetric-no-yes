@@ -3,15 +3,16 @@
 
 printf '%s\n' > file \
 	"${HEAD} ours" \
-	old \
+	new \
 	"${PARENT} base" \
 	old \
 	"${TAIL}" \
 	new \
 	"${END} theirs"
 
-cp -- file file.expected
+printf '%s\n' > file.expected \
+	new
 
-conflict --merge --no-merge file
+normal --no-symmetric --symmetric --no-reduce file
 
-also_interactive r
+also_interactive y

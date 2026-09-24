@@ -2,7 +2,8 @@ NAME
 	git-rediff - Reduce partially resolved merge conflicts
 
 SYNOPSIS
-	git rediff [--no-reduce] [--merge|--select-head|--select-tail] [--remove-base] [-i] [<path>...]
+	git rediff [--merge|--symmetric|--select-head|--select-tail]
+	           [--remove-base] [--no-reduce] [-i] [<path>...]
 
 DESCRIPTION
 	git rediff rewrites files containing merge conflicts to
@@ -11,8 +12,8 @@ DESCRIPTION
 OPTIONS
 	-i
 	--interactive
-		Interactively select the action for each merge conflict.
-		See INTERACTIVE COMMANDS.
+		Interactively select the action for each merge
+		conflict. See INTERACTIVE COMMANDS.
 
 		This overrides all other options.
 
@@ -21,24 +22,39 @@ OPTIONS
 
 	-m
 	--merge
-		For conflicts with at least three branches, select the sole branch
-		whose content differs from all other identical branches, but only
-		if that is the top or bottom branch.
+		For conflicts with at least three branches, select
+		the sole branch whose content differs from all other
+		identical branches, but only if that is the top or
+		bottom branch.
 
 		Applied before --remove-base.
 
 	--no-merge
 		Disable --merge.
 
+	-y
+	--symmetric
+		When the top and bottom branches are identical, select
+		their content if all other branches are identical to
+		each other.
+
+		Applied before --reduce.
+
+	--no-symmetric
+		Disable --symmetric.
+
+	-r
 	--reduce
 		Enable reduction of remaining conflicts. (Default)
 
 	--no-reduce
-		Do not reduce remaining conflicts after --merge, --remove-base,
-		--select-head, and --select-tail have been applied.
+		Do not reduce remaining conflicts after --merge,
+		--remove-base, --select-head, and --select-tail have
+		been applied.
 
 	--remove-base
-		Remove the middle branch from three-way merge conflicts.
+		Remove the middle branch from three-way merge
+		conflicts.
 
 		Applied before --reduce.
 
@@ -46,7 +62,8 @@ OPTIONS
 		Disable --remove-base.
 
 	--select-head
-		Resolve each merge conflict by selecting its top branch.
+		Resolve each merge conflict by selecting its top
+		branch.
 
 		Applied before --reduce.
 
@@ -54,7 +71,8 @@ OPTIONS
 		Disable --select-head.
 
 	--select-tail
-		Resolve each merge conflict by selecting its bottom branch.
+		Resolve each merge conflict by selecting its bottom
+		branch.
 
 		Applied before --reduce.
 
@@ -71,15 +89,19 @@ INTERACTIVE COMMANDS
 
 	m	Apply merge selection.
 
+	y	Select symmetric branches.
+
 	r	Reduce the conflict.
 
 	e	Manually edit the conflict.
 
 	s	Skip the conflict.
 
-	d	Skip the conflict and all later conflicts in the current file.
+	d	Skip the conflict and all later conflicts in the
+		current file.
 
-	q	Quit interaction and skip the conflict and all remaining conflicts.
+	q	Quit interaction and skip the conflict and all
+		remaining conflicts.
 
 	?	Display help.
 

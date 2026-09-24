@@ -1,0 +1,34 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	first \
+	"${PARENT} base" \
+	not-first \
+	"${TAIL}" \
+	first \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours \
+	common \
+	"${PARENT} base" \
+	base \
+	common \
+	"${TAIL}" \
+	theirs \
+	common \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	first \
+	"${HEAD} ours" \
+	ours \
+	"${TAIL}" \
+	theirs \
+	"${END} theirs" \
+	common
+
+conflict --remove-base --symmetric --reduce file
+
+also_interactive yy

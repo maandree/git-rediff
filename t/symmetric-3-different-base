@@ -1,0 +1,18 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} 2" \
+	different \
+	"${TAIL}" \
+	same \
+	"${END} theirs"
+
+printf '%s\n' > file.expected \
+	same
+
+normal --symmetric --no-reduce file
+
+also_interactive y

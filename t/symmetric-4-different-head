@@ -3,18 +3,17 @@
 
 printf '%s\n' > file \
 	"${HEAD} ours" \
+	different \
+	"${PARENT} 2" \
 	same \
-	ours \
-	"${PARENT} base" \
+	"${PARENT} 3" \
 	same \
-	base \
 	"${TAIL}" \
 	same \
-	theirs \
 	"${END} theirs"
 
 cp -- file file.expected
 
-conflict --reduce --no-reduce file
+conflict --symmetric --no-reduce file
 
-also_interactive s
+also_interactive y

@@ -4,17 +4,14 @@
 printf '%s\n' > file \
 	"${HEAD} ours" \
 	same \
-	ours \
 	"${PARENT} base" \
-	same \
 	base \
 	"${TAIL}" \
 	same \
-	theirs \
 	"${END} theirs"
 
 cp -- file file.expected
 
-conflict --reduce --no-reduce file
+conflict --symmetric --no-symmetric --no-reduce file
 
-also_interactive s
+also_interactive r

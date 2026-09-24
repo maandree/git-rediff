@@ -4,17 +4,15 @@
 printf '%s\n' > file \
 	"${HEAD} ours" \
 	same \
-	ours \
 	"${PARENT} base" \
-	same \
-	base \
+	different \
 	"${TAIL}" \
 	same \
-	theirs \
 	"${END} theirs"
 
-cp -- file file.expected
+printf '%s\n' > file.expected \
+	same
 
-conflict --reduce --no-reduce file
+normal -y --no-reduce file
 
-also_interactive s
+also_interactive y

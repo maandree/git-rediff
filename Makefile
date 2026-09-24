@@ -86,27 +86,36 @@ TEST =\
 	t/combination-select-head-reduce\
 	t/combination-select-tail-reduce\
 	t/combination-merge-reduce\
+	t/combination-symmetric-reduce\
 	t/combination-remove-base-select-head-reduce\
 	t/combination-remove-base-select-tail-reduce\
 	t/combination-remove-base-merge-reduce\
+	t/combination-remove-base-symmetric-reduce\
 	t/combination-remove-base-reduce\
 	t/all-positive-options-merge\
+	t/all-positive-options-symmetric\
 	t/all-positive-options-select-head\
 	t/all-positive-options-select-tail\
 	t/combination-2-select-head\
 	t/combination-2-select-tail\
 	t/combination-2-merge\
+	t/combination-2-symmetric\
 	t/combination-2-remove-base\
 	t/combination-2-interactive\
 	t/combination-select-head-2-no-select-head\
 	t/combination-select-tail-2-no-select-tail\
 	t/combination-merge-2-no-merge\
+	t/combination-symmetric-2-no-symmetric\
 	t/combination-remove-base-2-no-remove-base\
 	t/combination-interactive-2-no-interactive\
 	t/merge-short-option\
+	t/symmetric-short-option\
+	t/reduce-short-option\
 	t/interactive-short-option\
 	t/no-option-merge-yes-no\
 	t/no-option-merge-no-yes\
+	t/no-option-symmetric-yes-no\
+	t/no-option-symmetric-no-yes\
 	t/no-option-remove-base-yes-no\
 	t/no-option-remove-base-no-yes\
 	t/no-option-select-head-yes-no\
@@ -120,6 +129,7 @@ TEST =\
 	t/no-option-select-head-yes-then-select-tail-yes-no\
 	t/no-option-select-tail-yes-then-select-head-yes-no\
 	t/no-option-merge\
+	t/no-option-symmetric\
 	t/no-option-remove-base\
 	t/no-option-select-head\
 	t/no-option-select-tail\
@@ -172,6 +182,29 @@ TEST =\
 	t/merge-empty-head\
 	t/merge-empty-base\
 	t/merge-empty-tail\
+	t/symmetric-1\
+	t/symmetric-2-different\
+	t/symmetric-2-identical\
+	t/symmetric-3-different-head\
+	t/symmetric-3-different-tail\
+	t/symmetric-3-different-base\
+	t/symmetric-3-all-different\
+	t/symmetric-3-all-identical\
+	t/symmetric-4-different-upper-middle\
+	t/symmetric-4-different-lower-middle\
+	t/symmetric-4-unique-different-middles\
+	t/symmetric-4-same-different-middles\
+	t/symmetric-4-identical\
+	t/symmetric-4-different-head\
+	t/symmetric-4-different-tail\
+	t/symmetric-5-different-upper-middle\
+	t/symmetric-5-different-lower-middle\
+	t/symmetric-no-conflicts\
+	t/symmetric-multiple-conflicts\
+	t/symmetric-multiple-files\
+	t/symmetric-3-empty-head\
+	t/symmetric-3-empty-tail\
+	t/symmetric-3-empty-head-tail\
 	t/marker-size-10\
 	t/marker-size-3\
 	t/marker-size-shorter-ignored\

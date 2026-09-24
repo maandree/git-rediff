@@ -1,28 +1,23 @@
 #!/bin/sh -e
 . t/common.sh
+interactive
 
 printf '%s\n' > file \
 	"${HEAD} ours" \
 	same \
-	new \
+	ours \
 	"${PARENT} base" \
 	same \
-	old \
+	base \
 	"${TAIL}" \
 	same \
-	old \
+	theirs \
 	"${END} theirs"
 
 printf '%s\n' > file.expected \
 	same \
-	"${HEAD} ours" \
-	new \
-	"${PARENT} base" \
-	old \
-	"${TAIL}" \
-	old \
-	"${END} theirs"
+	ours
 
-conflict --no-merge file
-
-also_interactive rr
+printf '%s' h > input
+normal --symmetric --remove-base --reduce --interactive file 8<input 9>output
+test -s output

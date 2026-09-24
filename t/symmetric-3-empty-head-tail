@@ -1,0 +1,15 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} ours" \
+	"${PARENT} 2" \
+	base \
+	"${TAIL}" \
+	"${END} theirs"
+
+: > file.expected
+
+normal --symmetric --no-reduce file
+
+also_interactive y

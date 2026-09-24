@@ -1,0 +1,29 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > first \
+	"${HEAD} ours" \
+	same \
+	"${PARENT} base" \
+	different \
+	"${TAIL}" \
+	same \
+	"${END} theirs"
+
+printf '%s\n' > first.expected \
+	same
+
+printf '%s\n' > second \
+	"${HEAD} ours" \
+	different \
+	"${PARENT} base" \
+	interior \
+	"${TAIL}" \
+	same \
+	"${END} theirs"
+
+cp -- second second.expected
+
+conflict --symmetric --no-reduce first second
+
+also_interactive yy

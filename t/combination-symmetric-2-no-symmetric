@@ -10,7 +10,7 @@ printf '%s\n' > file \
 	old \
 	"${TAIL}" \
 	same \
-	old \
+	new \
 	"${END} theirs"
 
 printf '%s\n' > file.expected \
@@ -20,9 +20,9 @@ printf '%s\n' > file.expected \
 	"${PARENT} base" \
 	old \
 	"${TAIL}" \
-	old \
+	new \
 	"${END} theirs"
 
-conflict --no-merge file
+conflict --symmetric --no-symmetric --no-symmetric file
 
-also_interactive rr
+also_interactive r

@@ -3,26 +3,34 @@
 
 printf '%s\n' > file \
 	"${HEAD} ours" \
-	same \
-	ours \
+	first \
 	"${PARENT} base" \
-	same \
-	base \
+	not-first \
 	"${TAIL}" \
-	same \
+	first \
+	"${END} theirs" \
+	"${HEAD} ours" \
+	ours \
+	common \
+	"${PARENT} base" \
+	base \
+	common \
+	"${TAIL}" \
 	theirs \
+	common \
 	"${END} theirs"
 
 printf '%s\n' > file.expected \
-	same \
+	first \
 	"${HEAD} ours" \
 	ours \
 	"${PARENT} base" \
 	base \
 	"${TAIL}" \
 	theirs \
-	"${END} theirs"
+	"${END} theirs" \
+	common
 
-conflict --no-reduce --reduce file
+conflict --symmetric --reduce file
 
-also_interactive r
+also_interactive yr

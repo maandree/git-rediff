@@ -1,0 +1,26 @@
+#!/bin/sh -e
+. t/common.sh
+
+printf '%s\n' > file \
+	"${HEAD} 1" \
+	common-first \
+	head-second \
+	common-third \
+	"${TAIL} 2" \
+	common-first \
+	tail-second \
+	common-third \
+	"${END} 2"
+
+printf '%s\n' > file.expected \
+	common-first \
+	"${HEAD} 1" \
+	head-second \
+	"${TAIL} 2" \
+	tail-second \
+	"${END} 2" \
+	common-third
+
+conflict -r file
+
+also_interactive r

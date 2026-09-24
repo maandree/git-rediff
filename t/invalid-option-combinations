@@ -16,5 +16,54 @@ error --select-head --merge --select-tail file
 error --select-head --select-tail --merge file
 error --select-tail --merge --select-head file
 error --select-tail --select-head --merge file
+error --symmetric --merge file
+error --merge --symmetric file
+error --symmetric --select-head file
+error --select-head --symmetric file
+error --symmetric --select-tail file
+error --select-tail --symmetric file
+error --symmetric --merge --select-head file
+error --symmetric --select-head --merge file
+error --symmetric --merge --select-tail file
+error --symmetric --select-tail --merge file
+error --symmetric --select-head --select-tail file
+error --symmetric --select-tail --select-head file
+error --merge --symmetric --select-head file
+error --select-head --symmetric --merge file
+error --merge --symmetric --select-tail file
+error --select-tail --symmetric --merge file
+error --select-head --symmetric --select-tail file
+error --select-tail --symmetric --select-head file
+error --merge --select-head --symmetric file
+error --select-head --merge --symmetric file
+error --merge --select-tail --symmetric file
+error --select-tail --merge --symmetric file
+error --select-head --select-tail --symmetric file
+error --select-tail --select-head --symmetric file
+error --symmetric --merge --select-head --select-tail file
+error --symmetric --merge --select-tail --select-head file
+error --symmetric --select-head --merge --select-tail file
+error --symmetric --select-head --select-tail --merge file
+error --symmetric --select-tail --merge --select-head file
+error --symmetric --select-tail --select-head --merge file
+error --merge --symmetric --select-head --select-tail file
+error --merge --symmetric --select-tail --select-head file
+error --select-head --symmetric --merge --select-tail file
+error --select-head --symmetric --select-tail --merge file
+error --select-tail --symmetric --merge --select-head file
+error --select-tail --symmetric --select-head --merge file
+error --merge --select-head --symmetric --select-tail file
+error --merge --select-tail --symmetric --select-head file
+error --select-head --merge --symmetric --select-tail file
+error --select-head --select-tail --symmetric --merge file
+error --select-tail --merge --symmetric --select-head file
+error --select-tail --select-head --symmetric --merge file
+error --merge --select-head --select-tail --symmetric file
+error --merge --select-tail --select-head --symmetric file
+error --select-head --merge --select-tail --symmetric file
+error --select-head --select-tail --merge --symmetric file
+error --select-tail --merge --select-head --symmetric file
+error --select-tail --select-head --merge --symmetric file
+
 error --unknown-option file
 error '-$' file
