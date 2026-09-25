@@ -83,6 +83,8 @@ TEST =\
 	t/no-reduce\
 	t/no-reduce-dashdash-dashprefix\
 	t/invalid-option-combinations\
+	t/combination-merge-symmetric\
+	t/combination-symmetric-merge\
 	t/combination-select-head-reduce\
 	t/combination-select-tail-reduce\
 	t/combination-merge-reduce\
@@ -92,10 +94,6 @@ TEST =\
 	t/combination-remove-base-merge-reduce\
 	t/combination-remove-base-symmetric-reduce\
 	t/combination-remove-base-reduce\
-	t/all-positive-options-merge\
-	t/all-positive-options-symmetric\
-	t/all-positive-options-select-head\
-	t/all-positive-options-select-tail\
 	t/combination-2-select-head\
 	t/combination-2-select-tail\
 	t/combination-2-merge\
@@ -108,6 +106,9 @@ TEST =\
 	t/combination-symmetric-2-no-symmetric\
 	t/combination-remove-base-2-no-remove-base\
 	t/combination-interactive-2-no-interactive\
+	t/all-positive-options-merge-symmetric\
+	t/all-positive-options-select-head\
+	t/all-positive-options-select-tail\
 	t/merge-short-option\
 	t/symmetric-short-option\
 	t/reduce-short-option\

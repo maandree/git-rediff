@@ -2,7 +2,7 @@ NAME
 	git-rediff - Reduce partially resolved merge conflicts
 
 SYNOPSIS
-	git rediff [--merge|--symmetric|--select-head|--select-tail]
+	git rediff [-my|--select-head|--select-tail]
 	           [--remove-base] [--no-reduce] [-i] [<path>...]
 
 DESCRIPTION

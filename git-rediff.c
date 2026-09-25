@@ -8,7 +8,7 @@
 #include <signal.h>
 #include <termios.h>
 
-NUSAGE(2, "[--merge|--symmetric|--select-head|--select-tail] [--remove-base] [--no-reduce] [-i] [<path>...]");
+NUSAGE(2, "[-my|--select-head|--select-tail] [--remove-base] [--no-reduce] [-i] [<path>...]");
 
 #if defined(__clang__)
 # pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
@@ -789,6 +789,8 @@ rediff_hunk(struct text *resp, const struct hunk *hunk, const struct line *tail)
 	unsigned char last_byte;
 	struct hunk uncommon, baseless_hunk;
 	int in_uncommon = 0;
+	int try_merge;
+	int try_symmetric;
 	enum successfulness ret = MERGED;
 
 	if (select_head || select_tail) {
@@ -796,26 +798,26 @@ rediff_hunk(struct text *resp, const struct hunk *hunk, const struct line *tail)
 		return MERGED;
 	}
 
-	if (merge && hunk->nsubs >= 3U) {
+	try_merge = (merge && hunk->nsubs >= 3U);
+	try_symmetric = symmetric;
+	if (try_merge || try_symmetric) {
 		if (texts_equal(&hunk->subs[0].text, &hunk->subs[hunk->nsubs - 1U].text))
+			try_merge = 0;
+		else
+			try_symmetric = 0;
+		if (!(try_merge | try_symmetric))
 			goto genuine_conflict;
 		for (i = 2U; i < hunk->nsubs - 1U; i++)
 			if (!texts_equal(&hunk->subs[i].text, &hunk->subs[1U].text))
 				goto genuine_conflict;
-		if (texts_equal(&hunk->subs[1U].text, &hunk->subs[hunk->nsubs - 1U].text))
+		if (try_symmetric)
+			append_text(resp, &hunk->subs[0].text);
+		else if (texts_equal(&hunk->subs[1U].text, &hunk->subs[hunk->nsubs - 1U].text))
 			append_text(resp, &hunk->subs[0].text);
 		else if (texts_equal(&hunk->subs[1U].text, &hunk->subs[0].text))
 			append_text(resp, &hunk->subs[hunk->nsubs - 1U].text);
 		else
 			goto genuine_conflict;
-		return MERGED;
-	} else if (symmetric) {
-		if (!texts_equal(&hunk->subs[0].text, &hunk->subs[hunk->nsubs - 1U].text))
-			goto genuine_conflict;
-		for (i = 2U; i < hunk->nsubs - 1U; i++)
-			if (!texts_equal(&hunk->subs[i].text, &hunk->subs[1U].text))
-				goto genuine_conflict;
-		append_text(resp, &hunk->subs[0].text);
 		return MERGED;
 	}
 genuine_conflict:
@@ -1172,7 +1174,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (merge + symmetric + select_head + select_tail > 1)
+	if ((merge | symmetric) + select_head + select_tail > 1)
 		usage();
 
 	originally_interactive = interactive;

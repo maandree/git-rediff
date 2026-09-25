@@ -19,5 +19,5 @@ printf '%s\n' > file.expected \
 	ours
 
 printf '%s' h > input
-normal --symmetric --remove-base --reduce --interactive file 8<input 9>output
+normal --merge --symmetric --remove-base --reduce --interactive file 8<input 9>output
 test -s output
